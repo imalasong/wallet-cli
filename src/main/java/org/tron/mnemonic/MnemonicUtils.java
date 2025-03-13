@@ -111,7 +111,7 @@ public class MnemonicUtils {
     Bip32ECKeyPair bip44Keypair = Bip32ECKeyPair.deriveKeyPair(masterKeypair, path);
     Credentials credentials = Credentials.create(bip44Keypair);
     String privateKey = credentials.getEcKeyPair().getPrivateKey().toString(16);
-
+    System.out.println("G privateKey="+privateKey);
     return ByteArray.fromHexString(privateKey);
   }
 

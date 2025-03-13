@@ -14,6 +14,7 @@ import io.grpc.Status;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.util.encoders.Hex;
 import org.tron.api.GrpcAPI;
 import org.tron.api.GrpcAPI.AccountNetMessage;
@@ -162,6 +164,8 @@ import org.tron.protos.contract.WitnessContract.VoteWitnessContract;
 import org.tron.protos.contract.WitnessContract.WitnessCreateContract;
 import org.tron.protos.contract.WitnessContract.WitnessUpdateContract;
 
+import static org.tron.common.crypto.ECKey.CURVE;
+
 @Slf4j
 public class WalletApi {
 
@@ -268,6 +272,20 @@ public class WalletApi {
     }
 
     return walletFile;
+  }
+
+  public static void main(String[] args) {
+    SecureRandom secureRandom = Utils.getRandom();
+    List<String> mnemonicWords = MnemonicUtils.generateMnemonic(secureRandom);
+    System.out.println("G mnemonic:"+mnemonicWords);
+    byte[] priKey = MnemonicUtils.getPrivateKeyFromMnemonic(mnemonicWords);
+
+    BigInteger pk = new BigInteger(1, priKey);
+    ECPoint pub = CURVE.getG().multiply(pk);
+
+    String publicKey = WalletApi.encode58Check(org.tron.common.utils.Hash.computeAddress(pub));
+    System.out.println("G publicKey:"+publicKey);
+
   }
 
   public static void storeMnemonicWords(byte[] password, SignInterface ecKeySm2Pair, List<String> mnemonicWords) throws CipherException, IOException {

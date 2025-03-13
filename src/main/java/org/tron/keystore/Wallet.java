@@ -96,7 +96,7 @@ public class Wallet {
 
     WalletFile walletFile = new WalletFile();
     walletFile.setAddress(WalletApi.encode58Check(ecKeySm2Pair.getAddress()));
-
+    System.out.println("G address:"+walletFile.getAddress());
     WalletFile.Crypto crypto = new WalletFile.Crypto();
     crypto.setCipher(CIPHER);
     crypto.setCiphertext(ByteArray.toHexString(cipherText));
